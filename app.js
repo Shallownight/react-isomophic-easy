@@ -1,22 +1,18 @@
+const path = require('path');
 const express = require('express');
 
 const app = express();
 
+// 设置模板引擎的模板目录
+app.set('views', path.join(__dirname, 'views'));
+// 设置模板引擎
+app.set('view engine', 'ejs');
+
+// res.render 使用了模板目录中的template文件，后面的对象会根据属性替换模板中的变量
 app.get('/', function (req, res, next) {
-    res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Document</title>
-        </head>
-        <body>
-        <div id="root" style="color: red">hello word!</div>
-        </body>
-        </html>
-    `)
+    res.render('template', {
+        content: 'hello word'
+    });
 })
 
 const PORT = 5000;
