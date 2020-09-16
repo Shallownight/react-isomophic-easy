@@ -6,8 +6,9 @@ export default class Todo extends React.Component {
     };
 
     addTodo = () => {
+        this.state.todoList.push(new Date().toTimeString());
         this.setState({
-            todoList: this.todoList.push(new Date())
+            todoList: this.state.todoList
         })
     };
 

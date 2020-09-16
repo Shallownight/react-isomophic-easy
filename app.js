@@ -5,7 +5,7 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
 // 打包的文件是个对象，代码会放在.default属性中
-const distPage = require('./dist').default;
+const distPage = require('./dist/server').default;
 
 const app = express();
 
@@ -13,6 +13,14 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 // 设置模板引擎
 app.set('view engine', 'ejs');
+
+// 将 Client 输出目录作为静态资源目录
+app.use(express.static(path.resolve(__dirname, './dist/client')));
+
+// 需要引入打包后的页面js文件，进行补水（hydrate）
+function loadScript() {
+    return `<script src="index.js"></script>`
+}
 
 // 将打包后的react代码转换成html代码
 function render(req, res, next) {
@@ -22,7 +30,8 @@ function render(req, res, next) {
         React.createElement(distPage)
     );
     res.render('template', {
-        content: contentHtml
+        content: contentHtml,
+        script: loadScript(),
     })
 }
 

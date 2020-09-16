@@ -5,6 +5,7 @@
         <title>ejs template</title>
     </head>
     <body>
-        <%- content %>
+        <div id="root"><% if (content) { %><%-content%><% } %></div>
+        <%- script %>
     </body>
 </html>
