@@ -10,7 +10,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // 将 Client 输出目录作为静态资源目录
-app.use(express.static(path.resolve(__dirname, './dist/client')));
+app.use(express.static(path.resolve(__dirname, './dist')));
 
 // 路由
 routes(app);

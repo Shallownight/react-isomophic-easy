@@ -3,7 +3,7 @@ const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
 function loadScript(page) {
-    return `<script src="${page}.js"></script>`
+    return `<script src="dll/vendors.dll.js"></script><script src="client/${page}.js"></script>`
 }
 
 function routes(app) {
