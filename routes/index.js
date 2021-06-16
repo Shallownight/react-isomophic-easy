@@ -2,6 +2,12 @@ const pages = require('../build/pages');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
+// 页面的名称 - 模块映射
+const pageMap = pages.reduce((acc, page) => {
+    acc[page] = require('./server/' + page);
+    return acc
+}, {});
+
 function loadScript(page) {
     return `<script src="dll/vendors.dll.js"></script><script src="client/${page}.js"></script>`
 }
@@ -16,11 +22,9 @@ function routes(app) {
             })
         }
 
-        // 打包的文件是个对象，代码会放在.default属性中
-        const distPage = require('../dist/server/' + req.params.page).default;
         const contentHtml = ReactDOMServer.renderToString(
             // 在服务端运行 React
-            React.createElement(distPage)
+            React.createElement(pageMap[page])
         );
 
         res.render('template', {

@@ -17,9 +17,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react', {
-                'plugins': ['@babel/plugin-proposal-class-properties']
-            }]
+            presets: ['@babel/preset-env', '@babel/preset-react'],
+            plugins: ['@babel/plugin-proposal-class-properties']
           }
         }
       },
@@ -42,6 +41,16 @@ module.exports = {
         ]
       }
     ]
+  },
+  resolve: {
+    extensions: [".js", ".jsx", ".json"],
+    alias: {
+      "src": path.join(__dirname, "../src")
+    }
+  },
+  optimization: {
+    // debug
+    minimize: false
   },
   plugins: [
     new CleanWebpackPlugin()

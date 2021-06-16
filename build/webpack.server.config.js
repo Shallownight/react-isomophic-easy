@@ -1,21 +1,29 @@
 const path = require('path');
 const { merge } = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.config');
-const pages = require('./pages');
-
-const multiPageEntry = {};
-pages.forEach(page => {
-    multiPageEntry[page] = path.resolve(__dirname, '../src/' + page + '/index.jsx');
-});
+const serverBabelConfig = require('./config/serverBabelConfig');
 
 module.exports = merge(baseWebpackConfig, {
     // node中运行
     target: 'node',
-    entry: multiPageEntry,
+    entry: path.resolve(__dirname, '../app.js'),
     output: {
         // 能够使用commonJs语法引入（require）
-        libraryTarget: 'commonjs',
-        filename: '[name].js',
-        path: path.resolve(__dirname, '../dist/server')
-    }
+        libraryTarget: 'commonjs2',
+        filename: 'app.js',
+        path: path.resolve(__dirname, '../dist/server'),
+        publicPath: '/',
+    },
+    // module: {
+    //     rules: [
+    //         {
+    //             test: /\.js|jsx$/,
+    //             exclude: /(node_modules|bower_components)/,
+    //             use: {
+    //                 loader: 'babel-loader',
+    //                 options: serverBabelConfig
+    //             }
+    //         }
+    //     ]
+    // }
 })
