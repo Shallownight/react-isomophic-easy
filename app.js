@@ -21,7 +21,4 @@ app.use(express.static('dist'));
 // 路由
 routes(app);
 
-const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
-});
+module.exports = app;
