@@ -6,6 +6,8 @@ const path = require('path');
 const express = require('express');
 const webpack = require('./node_modules/webpack');
 const webpackServerConfig = require('./build/webpack.server.config');
+const webpackClientConfig = require('./build/webpack.client.config');
+const webpackDevMiddleware = require('webpack-dev-middleware');
 
 // 作为监听端口的服务，数据请求将传递给app.js中的服务
 const server = express();
@@ -52,6 +54,14 @@ webpack(webpackServerConfig).watch(300, function(err, stats) {
             // app中的服务需要处理打到5000端口的请求
             app.handle(req, res, next);
         })
+
+        const clientCompiler = webpack(webpackClientConfig);
+
+        // 通过webpack-dev-middleware监听客户端变化，实时更新
+        const devMiddleware = webpackDevMiddleware(clientCompiler, {
+            publicPath: '/client'
+        });
+        server.use(devMiddleware);
 
         const PORT = 5000;
         server.listen(PORT, () => {
