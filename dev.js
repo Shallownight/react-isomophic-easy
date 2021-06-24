@@ -8,6 +8,7 @@ const webpack = require('./node_modules/webpack');
 const webpackServerConfig = require('./build/webpack.server.config');
 const webpackClientConfig = require('./build/webpack.client.config');
 const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
 
 // 作为监听端口的服务，数据请求将传递给app.js中的服务
 const server = express();
@@ -55,13 +56,28 @@ webpack(webpackServerConfig).watch(300, function(err, stats) {
             app.handle(req, res, next);
         })
 
+        // HMR配置
+        // add hot-reload related code to entry chunks
+        const hotMiddlewareScript = 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true&noInfo=true';
+        Object.keys(webpackClientConfig.entry).forEach(function (name) {
+            webpackClientConfig.entry[name].push(hotMiddlewareScript);
+        });
+        webpackClientConfig.mode = 'development';
+        webpackClientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+
         const clientCompiler = webpack(webpackClientConfig);
 
         // 通过webpack-dev-middleware监听客户端变化，实时更新
         const devMiddleware = webpackDevMiddleware(clientCompiler, {
             publicPath: '/client'
         });
+
+        const hotMiddleware = webpackHotMiddleware(clientCompiler, {
+            log: false,
+        })
+
         server.use(devMiddleware);
+        server.use(hotMiddleware);
 
         const PORT = 5000;
         server.listen(PORT, () => {

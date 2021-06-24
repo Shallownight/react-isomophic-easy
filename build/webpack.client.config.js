@@ -6,7 +6,7 @@ const pages = require('./pages');
 
 const multiPageEntry = {};
 pages.forEach(page => {
-    multiPageEntry[page] = path.resolve(__dirname, '../routes/client/' + page);
+    multiPageEntry[page] = [path.resolve(__dirname, '../routes/client/' + page)];
 });
 
 module.exports = merge(baseWebpackConfig, {
